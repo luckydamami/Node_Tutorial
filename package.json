@@ -1,0 +1,20 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "creating my node package file",
+  "license": "ISC",
+  "author": "lucifer",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.17.1",
+    "nodemon": "^3.1.10"
+  }
+}
