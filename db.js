@@ -4,7 +4,9 @@
 const mongoose = require("mongoose");
 
 //step-2 define the mongoDB url
-const mongoURL = "mongodb://127.0.0.1:27017/hotels";
+//const mongoURL = "mongodb://127.0.0.1:27017/hotels";
+const mongoURL =
+  "mongodb+srv://Aniket:<db_password>@cluster0.4mdovk4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 //step-3 setup the MongoDB connection
 mongoose.connect(mongoURL, {
