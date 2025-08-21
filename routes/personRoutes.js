@@ -75,7 +75,7 @@ personRouter.delete("/:id", async (req, res) => {
     if (!response) {
       return res.status(404).json({ error: "person not found" });
     }
-    console.log("Data was updated");
+    console.log("Data was Deleted!");
     res.status(200).json(response);
   } catch (error) {
     console.log(error);

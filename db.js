@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
-const mongoURL = process.env.MONGODB_LOCAL_URL;
+//const mongoURL = process.env.MONGODB_LOCAL_URL;
 //const mongoURL = process.env.MONGODB_URL;
+const mongoURL =
+  "mongodb+srv://Aniket:Data123Ani@cluster0.4mdovk4.mongodb.net/";
 
 mongoose.connect(mongoURL, {
   useNewUrlParser: true,
