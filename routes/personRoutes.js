@@ -20,7 +20,7 @@ personRouter.get("/", async (req, res) => {
   try {
     const info = await Person.find();
     console.log("Your data is Get ready!");
-    res.status(200).json(info);
+    res.status(200).json(info, req.url);
   } catch (error) {
     console.log("Oops! error was occured!", error);
     res.status(500).json({ error: "An server error occured!" });

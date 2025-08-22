@@ -26,6 +26,14 @@ const personSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  username: {
+    required: true,
+    type: String,
+  },
+  password: {
+    required: true,
+    type: String,
+  },
 });
 
 const personModel = new mongoose.model("personModel", personSchema);
