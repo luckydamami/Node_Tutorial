@@ -8,7 +8,7 @@ personRouter.post("/", async (req, res) => {
     const data = req.body;
     const personObj = new Person(data);
     const response = await personObj.save();
-    console.log("data was saved!");
+    console.log("Person Data was saved!");
     res.status(200).json(response);
   } catch (error) {
     console.log("Oops! error was occured!", error);

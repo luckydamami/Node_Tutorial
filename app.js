@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const db = require("./db");
 const personRouter = require("./routes/personRoutes");
 const menueRouter = require("./routes/menueRoutes");
-//require("dotenv").config();
+require("dotenv").config();
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 app.use("/person", personRouter);
 app.use("/menue", menueRouter);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {
   error
     ? console.log("Oops! Something went wrong!")
