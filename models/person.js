@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const becrypt = require("bcrypt");
 
 const personSchema = new mongoose.Schema({
   name: {
@@ -36,6 +37,21 @@ const personSchema = new mongoose.Schema({
   },
 });
 
-const personModel = new mongoose.model("personModel", personSchema);
+personSchema.pre("save", async (next) => {
+  const person = this;
+  try {
+    //Hash the password only if it has been modified (or is new)
+    if (!person.isModified("password")) return next();
 
-module.exports = personModel;
+    //hash password generation process
+    const salt = await becrypt.genSalt(10);
+    const hashPassword = await becrypt.hash(person.password, salt);
+    person.password = hashPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+const Person = new mongoose.model("Person", personSchema);
+module.exports = Person;
