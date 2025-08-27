@@ -12,19 +12,16 @@ const passport = require("./auth");
 require("dotenv").config();
 
 const app = express();
-
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate("local", { session: false });
+
+app.get("/", localAuthMiddleware, (req, res) => {
   res.send("Hello Everyone! welcome to my restaurent.");
 });
 
-app.use(passport.initialize());
-app.use(
-  "/person",
-  passport.authenticate("local", { session: false }),
-  personRouter
-);
+app.use("/person", personRouter);
 app.use("/menue", menueRouter);
 
 const PORT = process.env.PORT || 3000;

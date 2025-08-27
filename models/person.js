@@ -39,21 +39,26 @@ const personSchema = new mongoose.Schema({
 
 personSchema.pre("save", async function (next) {
   const person = this;
-  if (!person.isModified("password")) return next();
+  if (!this.isModified("password")) return next();
   try {
+    //generate salt for the hash password
     const salt = await bcrypt.genSalt(10);
+    //transform the plain password to hash password
     const hashedPassword = await bcrypt.hash(person.password, salt);
     person.password = hashedPassword;
-    next();
+    next(); //next callback message is process is complete and now save the database
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 
-personSchema.methods.comparePassword = async (candidatePassword) => {
+personSchema.methods.comparePassword = async function (userPassword) {
   try {
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    return isMatch;
+    const isMatchPassword = await bcrypt.compare(
+      userPassword, //candidate password = user plain password for login time
+      this.password //access the database hashed password
+    );
+    return isMatchPassword;
   } catch (error) {
     throw error;
   }

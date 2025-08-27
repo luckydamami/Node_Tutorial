@@ -7,13 +7,13 @@ passport.use(
   new localStrategy(async function (USERNAME, password, done) {
     try {
       const user = await Person.findOne({ username: USERNAME });
-      if (!user) return done(null, false, { message: "Incorrect username!" });
+      if (!user) return done(null, false, { message: "Invalid username!" });
       //const isMatchPassword = user.password === pwd ? true : false;
-      const isMatchPassword = user.comparePassword(password);
+      const isMatchPassword = await user.comparePassword(password);
       if (isMatchPassword) return done(null, user);
-      else return done(null, false, { message: "Invalid password!" });
+      else return done(null, false, { message: "Invalid Password!" });
     } catch (error) {
-      return done(null, error);
+      return done(error);
     }
   })
 );
