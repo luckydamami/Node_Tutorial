@@ -1,21 +1,44 @@
 const express = require("express");
 const Person = require("../models/person");
 
+const { jwtAuthMiddleware, generateToken } = require("./../jwt");
 const personRouter = express.Router();
 
-personRouter.post("/", async (req, res) => {
+//user signup route
+personRouter.post("/signup", async (req, res) => {
   try {
-    const data = req.body;
-    const personObj = new Person(data);
+    const personObj = new Person(req.body);
+
     const response = await personObj.save();
-    console.log("Person Data was saved!");
-    res.status(200).json(response);
+    console.log("Successfully Signed Up!");
+
+    const payload = {
+      id: response.id,
+      username: response.username,
+    };
+
+    const token = generateToken(payload);
+    console.log("Token is : ", token);
+
+    res.status(200).json({ response: response, token: token });
   } catch (error) {
     console.log("Oops! error was occured!", error);
     res.status(500).json({ error: "An server error occured!" });
   }
 });
 
+//login route
+personRouter.post("/login", async (req, res) => {
+  try {
+    //Extract username and password from the req body
+    const { username, password } = req.body;
+
+    //find the users by username
+    const user = await Person.findOne({ username: username });
+  } catch (error) {}
+});
+
+// Get method route for the get persons
 personRouter.get("/", async (req, res) => {
   try {
     const info = await Person.find();
