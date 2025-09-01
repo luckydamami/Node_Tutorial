@@ -1,26 +1,25 @@
 const jwt = require("jsonwebtoken");
 
 const jwtAuthMiddleware = (req, res, next) => {
-  //extract the jwt token from the request header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: "Token required!" });
+  //Token extract from user request
   const token = req.headers.authorization.split(" ")[1];
-  //agar token nahi mila to
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
-
+  //if token does not exit in user req
+  if (!token) return res.status(401).json({ message: "User Unautherized!" });
   try {
-    //verify the JWT token, its return a payload(user info)
+    //token verification
     const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
-    //Attach payload to the user request object
+    //payload data ko req object se attach kar diya aur
     req.user = decoded;
     next();
-  } catch (err) {
-    console.error(err);
-    res.status(401).json({ err: "Invalid Token!" });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid Token!" });
   }
 };
 
-function generateToken(userData) {
-  const jwtToken = jwt.sign(userData, process.env.JWT_SECRETKEY);
-  return jwtToken;
-}
+const generateToken = (userData) => {
+  return jwt.sign(userData, process.env.JWT_SECRETKEY, { expiresIn: 3000 });
+};
 
-module.exports = { jwtAuthMiddleware, generateToken };
+module.exports = { generateToken, jwtAuthMiddleware };
