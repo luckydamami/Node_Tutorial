@@ -1,23 +1,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const db = require("./db");
+
+const passport = require("./auth");
 
 const personRouter = require("./routes/personRoutes");
 const menueRouter = require("./routes/menueRoutes");
 
-const passport = require("./auth");
-
-//for .env file configuration
 require("dotenv").config();
 
 const app = express();
+
 app.use(bodyParser.json());
 
 app.use(passport.initialize());
 const localAuthMiddleware = passport.authenticate("local", { session: false });
 
-app.get("/", localAuthMiddleware, (req, res) => {
+app.use(localAuthMiddleware);
+
+app.get("/", (req, res) => {
   res.send("Hello Everyone! welcome to my restaurent.");
 });
 

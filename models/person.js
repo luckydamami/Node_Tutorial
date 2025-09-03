@@ -11,7 +11,7 @@ const personSchema = new mongoose.Schema({
   },
   work: {
     type: String,
-    enum: ["chef", "owner", "manager", "waiter"],
+    enum: ["chef", "owner", "manager", "waiter", "accounted"],
     required: true,
   },
   mobile: {
@@ -28,41 +28,38 @@ const personSchema = new mongoose.Schema({
     required: true,
   },
   username: {
-    required: true,
     type: String,
+    required: true,
   },
   password: {
-    required: true,
     type: String,
+    required: true,
+    unique: true,
   },
 });
 
-personSchema.pre("save", async function (next) {
+personSchema.pre("save", async (next) => {
   const person = this;
-  if (!this.isModified("password")) return next();
+  if (!person.isModified(password)) return next();
   try {
-    //generate salt for the hash password
-    const salt = await bcrypt.genSalt(10);
-    //transform the plain password to hash password
+    //genrate the salt for password
+    const salt = await bcrypt.genSalt(15);
+    //hashing the normal password
     const hashedPassword = await bcrypt.hash(person.password, salt);
     person.password = hashedPassword;
-    next(); //next callback message is process is complete and now save the database
-  } catch (error) {
-    next(error);
+    next();
+  } catch (err) {
+    return next(err);
   }
 });
 
-personSchema.methods.comparePassword = async function (userPassword) {
+personSchema.methods.comparePassword = async (userPassword) => {
   try {
-    const isMatchPassword = await bcrypt.compare(
-      userPassword, //candidate password = user plain password for login time
-      this.password //access the database hashed password
-    );
-    return isMatchPassword;
-  } catch (error) {
-    throw error;
+    const isMatch = await bcrypt.compare(userPassword, this.password);
+    return isMatch;
+  } catch (err) {
+    throw err;
   }
 };
-
-const Person = new mongoose.model("Person", personSchema);
-module.exports = Person;
+const personModel = new mongoose.model("personModel", personSchema);
+module.exports = personModel;

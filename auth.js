@@ -1,30 +1,21 @@
-//for Authentication and authorization logic
-const Person = require("./models/person");
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
+const personModel = require("./models/person");
 
 passport.use(
-  new localStrategy(async function (USERNAME, password, done) {
+  new localStrategy(async (username, password, done) => {
     try {
-      const user = await Person.findOne({ username: USERNAME });
-      if (!user) return done(null, false, { message: "Invalid username!" });
-      //const isMatchPassword = user.password === pwd ? true : false;
-      const isMatchPassword = await user.comparePassword(password);
+      const user = await personModel.findOne({ username });
+      if (!user) return done(null, false, { message: "User Not Found" });
+      //const isMatchPassword = user.password === password ? true : false;
+      const isMatchPassword = user.comparePassword(password);
+
       if (isMatchPassword) return done(null, user);
-      else return done(null, false, { message: "Invalid Password!" });
-    } catch (error) {
-      return done(error);
+      else return done(null, false, { message: "Incorrect User Password!" });
+    } catch (err) {
+      return done(err);
     }
   })
 );
 
 module.exports = passport;
-
-/*const logRequest = (req, res, next) => {
-  console.log(
-    `${new Date().toLocaleString()} to request make ${req.originalUrl}`
-  );
-  next();
-};
-
-app.use(logRequest);*/
