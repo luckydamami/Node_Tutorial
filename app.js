@@ -13,17 +13,15 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(passport.initialize());
-const localAuthMiddleware = passport.authenticate("local", { session: false });
-
-app.use(localAuthMiddleware);
+app.use(passport.initialize()); //step-1 initialize the passport
+const localAuthMiddleware = passport.authenticate("local", { session: false }); //step-2 use auth middleware
 
 app.get("/", (req, res) => {
   res.send("Hello Everyone! welcome to my restaurent.");
 });
 
 app.use("/person", personRouter);
-app.use("/menue", menueRouter);
+app.use("/menue", localAuthMiddleware, menueRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (error) => {

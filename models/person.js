@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -38,28 +37,28 @@ const personSchema = new mongoose.Schema({
   },
 });
 
-personSchema.pre("save", async (next) => {
+personSchema.pre("save", async function (nextCallback) {
   const person = this;
-  if (!person.isModified(password)) return next();
+  //if new password regiesterd and update
+  if (!person.isModified("password")) return nextCallback();
   try {
-    //genrate the salt for password
-    const salt = await bcrypt.genSalt(15);
-    //hashing the normal password
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(person.password, salt);
     person.password = hashedPassword;
-    next();
+    nextCallback();
   } catch (err) {
-    return next(err);
+    return nextCallback(err);
   }
 });
 
-personSchema.methods.comparePassword = async (userPassword) => {
+personSchema.methods.comparePassword = async function (userPassword) {
   try {
     const isMatch = await bcrypt.compare(userPassword, this.password);
     return isMatch;
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    throw error;
   }
 };
+
 const personModel = new mongoose.model("personModel", personSchema);
 module.exports = personModel;
