@@ -5,7 +5,8 @@ const menueRouter = express.Router();
 
 menueRouter.post("/", async (req, res) => {
   try {
-    const firstMenue = new Menue(req.body);
+    const menueData = req.body;
+    const firstMenue = new Menue(menueData);
     const response = await firstMenue.save();
     console.log("menue data is saved on database!");
     res.status(200).json(response);
@@ -25,9 +26,9 @@ menueRouter.get("/", async (req, res) => {
   }
 });
 
-menueRouter.get("/:tastType", async (req, res) => {
+menueRouter.get("/:taste", async (req, res) => {
   try {
-    const tastType = req.params.tastType;
+    const tastType = req.params.taste;
 
     if (tastType == "spicy" || tastType == "sweet" || tastType == "sour") {
       const response = await Menue.find({ taste: tastType });

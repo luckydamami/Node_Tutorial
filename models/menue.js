@@ -28,6 +28,6 @@ const menueSchema = new mongoose.Schema({
   },
 });
 
-const menueModel = new mongoose.model("menueModel", menueSchema);
+const Menue = new mongoose.model("Menue", menueSchema);
 
-module.exports = menueModel;
+module.exports = Menue;
