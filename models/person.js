@@ -41,9 +41,10 @@ personSchema.pre("save", async function (nextCallback) {
   const person = this;
   //if new password regiesterd and update
   if (!person.isModified("password")) return nextCallback();
+
   try {
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(person.password, salt);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
     person.password = hashedPassword;
     nextCallback();
   } catch (err) {
